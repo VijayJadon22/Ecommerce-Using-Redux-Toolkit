@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -8,11 +9,16 @@ const Form = () => {
     gender: "",
   });
 
+  const dispatch = useDispatch();
+
+  console.log(formData);
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(formData);
   };
   return (
     <div
@@ -24,7 +30,7 @@ const Form = () => {
       }}
     >
       <form onSubmit={handleSubmit}>
-        <div style={{marginBottom:"1rem"}}>
+        <div style={{ marginBottom: "1rem" }}>
           <label>Name:</label>
           <input
             type="text"
@@ -34,7 +40,7 @@ const Form = () => {
             placeholder="Enter your name"
           />
         </div>
-        <div style={{marginBottom:"1rem"}}>
+        <div style={{ marginBottom: "1rem" }}>
           <label>Email:</label>
           <input
             type="email"
@@ -44,7 +50,7 @@ const Form = () => {
             placeholder="Enter your email"
           />
         </div>
-        <div style={{marginBottom:"1rem"}}>
+        <div style={{ marginBottom: "1rem" }}>
           <label>Age:</label>
           <input
             type="number"
@@ -54,7 +60,7 @@ const Form = () => {
             placeholder="Enter your age"
           />
         </div>
-        <div style={{marginBottom:"1rem"}}>
+        <div style={{ marginBottom: "1rem" }}>
           <label>Gender:</label>
           <select
             name="gender"
