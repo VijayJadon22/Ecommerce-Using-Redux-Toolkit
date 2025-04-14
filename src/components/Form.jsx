@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { createUser } from "../store/features/userSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,8 @@ const Form = () => {
     age: "",
     gender: "",
   });
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -18,7 +22,17 @@ const Form = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(formData);
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.age ||
+      !formData.gender
+    ) {
+      alert("Please fill out all fields.");
+      return;
+    }
+    dispatch(createUser(formData));
+    navigate("/");
   };
   return (
     <div
