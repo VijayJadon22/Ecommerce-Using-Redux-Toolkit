@@ -42,6 +42,28 @@ export const deleteUser = createAsyncThunk("user/deleteUser", async (userId, { r
     } catch (error) {
         return rejectWithValue(error.message || "Something went wrong");
     }
+});
+
+export const editUser = createAsyncThunk("user/editUser", async (data, { rejectWithValue }) => {
+    try {
+        console.log("Data is", data);
+        const res = await fetch(`https://67fb96761f8b41c816844ac5.mockapi.io/crud/${data.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to update user details");
+        }
+
+        const result = await res.json();
+        return result;
+    } catch (error) {
+        return rejectWithValue(error.message || "Something went wrong");
+    }
 })
 
 const userSlice = createSlice({
@@ -91,6 +113,20 @@ const userSlice = createSlice({
                 state.users = state.users.filter((user) => user.id !== action.payload);
             })
             .addCase(deleteUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            // Handling editUser asyncThunk states
+            .addCase(editUser.pending, (state) => {
+                state.loading = true;
+                state.error = false
+            })
+            .addCase(editUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.users = state.users.map((user) => user.id === action.payload.id ? action.payload : user);
+            })
+            .addCase(editUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
